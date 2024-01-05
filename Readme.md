@@ -28,3 +28,4 @@
 | 400  | Bad request        |
 | 401  | Unauthorised       |
 | 402  | Payment required   |
+| 409  | Conflict           |

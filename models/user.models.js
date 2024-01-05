@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema(
 			trim: true,
 			index: true,
 		},
+		fullname: {
+			type: String,
+			required: true,
+			trim: true,
+		},
 		email: {
 			type: String,
 			required: true,
@@ -26,14 +31,8 @@ const userSchema = new mongoose.Schema(
 		refreshToken: {
 			type: String,
 		},
-		fullname: {
-			type: String,
-			required: true,
-			trim: true,
-		},
 		avatar: {
 			type: String, //cloudinary url
-			required: true,
 		},
 		coverImage: {
 			type: String,
