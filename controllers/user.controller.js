@@ -17,9 +17,7 @@ const registerUser = asyncHandler(async (req, res) => {
 	const { username, fullname, email, password } = req.body;
 
 	if (
-		[fullname, email, password, username].some(
-			(field) => field.trim().length() == 0
-		)
+		[fullname, email, password, username].some((field) => field?.trim() === "")
 	) {
 		throw new ApiError(400, "All fields are required");
 	}
@@ -37,16 +35,22 @@ const registerUser = asyncHandler(async (req, res) => {
 	const avatar = await uploadOnCloudinary(avatarLocalPath);
 	if (!avatar) throw new ApiError(400, "Avatar file is required");
 
-	const coverImageLocalPath = req.files?.coverImage[0]?.path;
-	if (!coverImageLocalPath) throw new ApiError(400, "Cover image is required");
+	// const coverImageLocalPath = req.files?.coverImage[0]?.path || "";
+	let coverImageLocalPath;
+	if (
+		req.files &&
+		Array.isArray(req.files.coverImage) &&
+		req.files.coverImage.length > 0
+	) {
+		coverImageLocalPath = req.files.coverImage[0].path;
+	}
 
 	const coverImage = await uploadOnCloudinary(coverImageLocalPath);
-	if (!coverImage) throw new ApiError(400, "Cover Image is required");
 
 	const user = await User.create({
 		fullname,
 		avatar: avatar.url,
-		coverImage: coverImage.url || "",
+		coverImage: coverImage?.url || "",
 		email,
 		password,
 		username: username.toLowerCase(),
