@@ -136,7 +136,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 	await User.findByIdAndUpdate(
 		req.user?._id,
 		{
-			$set: { refreshToken: undefined },
+			$unset: { refreshToken: 1 },
 		},
 		{ new: true }
 	);
@@ -168,17 +168,18 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 	if (incomingRefreshToken !== user?.refreshToken)
 		throw new ApiError(401, "Refresh Token is expired or used");
 
-	const { newAccessToken, newRefreshToken } =
-		await generateAccessAndRefreshToken(user);
+	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+		user
+	);
 
 	return res
 		.status(200)
-		.cookie("accessToken", newAccessToken, options)
-		.cookie("refreshToken", newRefreshToken, options)
+		.cookie("accessToken", accessToken, options)
+		.cookie("refreshToken", refreshToken, options)
 		.json(
 			new ApiResponse(
 				200,
-				{ accessToken: newAccessToken, refreshToken: newRefreshToken },
+				{ accessToken, refreshToken },
 				"Access token refreshed"
 			)
 		);
