@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
 	changeCurrentUserPassword,
 	getCurrentUser,
+	getUserChannelProfile,
 	getUserWatchHistory,
 	loginUser,
 	logoutUser,
